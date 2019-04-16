@@ -1,2 +1,6 @@
 
 \.idea/
+
+models/__pycache__/
+
+models/garmin/__pycache__/
