@@ -15,10 +15,23 @@
 
 import argparse
 import os
+from JSONhandler import JSONhandler
 from datetime import datetime
 from pygce.models.bot import GarminConnectBot
 
 AVAILABLE_OUTPUT_FORMATS = ["json", "csv"]
+
+
+def str2bool(v: str):
+    """
+    :param v: str
+        boolean value
+    :return: bool
+        True if string holds a true value; otherwise False
+    """
+    assert(isinstance(v, str))
+    return v.lower() in ("yes", "true", "t", "1")
+
 
 def parse_yyyy_mm_dd(d):
     """
@@ -30,6 +43,7 @@ def parse_yyyy_mm_dd(d):
 
     d = str(d).strip()  # discard jibberish
     return datetime.strptime(d, "%Y-%m-%d")
+
 
 def check_args(user, password, url, chromedriver, days, out_dir):
     """
@@ -53,9 +67,7 @@ def check_args(user, password, url, chromedriver, days, out_dir):
     assert (len(password) > 1)
     assert ("https" in url and "garmin" in url)
     assert (os.path.exists(chromedriver))
-    assert (len(days) == 2)
-    days[0] = parse_yyyy_mm_dd(days[0])
-    days[1] = parse_yyyy_mm_dd(days[1])
+    assert (2 == len(days))
     assert (isinstance(days[0], datetime))
     assert (days[0] <= days[1])  # start day <= end day
 
@@ -64,8 +76,9 @@ def check_args(user, password, url, chromedriver, days, out_dir):
 
     return True
 
-def get_gc_data(user:str, password:str, chromedriver:str, days:list, url:str="https://connect.garmin.com/signin/",
-                out_dir:str=".", format_out:str="csv", download_gpx:bool=False):
+
+def get_gc_data(user: str, password: str, chromedriver: str, days: list, url: str = "https://connect.garmin.com/signin/",
+                out_dir: str = ".", format_out: str = "csv", download_gpx: bool = False):
     """
     :param user: str
         User to use
@@ -109,14 +122,22 @@ def get_gc_data(user:str, password:str, chromedriver:str, days:list, url:str="ht
 # =======================
 # ====== main body ======
 # =======================
-# TODO read these from a config JSON
-user = "iam.andyharrison@gmail.com"
-password = "Hog$ToRSING5"
-chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
-days = ["2019-04-14", "2019-04-14"]
-url = "https://connect.garmin.com/signin/"
-out_dir = "./mygarmin/"
-format_out = "csv"
-download_gpx = False
+# read config from a JSON
+jsonhndlr = JSONhandler("gcf55_config.json")
+if jsonhndlr.read_json():
+    # read key values from config file (and cast as necessary)
+    user = jsonhndlr.get_val('user')
+    password = jsonhndlr.get_val('password')
+    chromedriver = jsonhndlr.get_val('chromedriver')
+    # TODO convert to list of datetime
+    days = jsonhndlr.get_val('days')
+    assert(2 == len(days))
+    days[0] = parse_yyyy_mm_dd(days[0])
+    days[1] = parse_yyyy_mm_dd(days[1])
+    url = jsonhndlr.get_val('url')
+    out_dir = jsonhndlr.get_val('out_dir')
+    format_out = jsonhndlr.get_val('format_out')
+    # convert to bool
+    download_gpx = str2bool(jsonhndlr.get_val('download_gpx'))
 
 get_gc_data(user, password, chromedriver, days, url, out_dir, format_out, download_gpx)
