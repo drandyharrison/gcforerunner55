@@ -15,7 +15,7 @@
 
 import argparse
 import os
-from JSONhandler import JSONhandler
+import JSONhandler
 from datetime import datetime
 from pygce.models.bot import GarminConnectBot
 
@@ -123,7 +123,7 @@ def get_gc_data(user: str, password: str, chromedriver: str, days: list, url: st
 # ====== main body ======
 # =======================
 # read config from a JSON
-jsonhndlr = JSONhandler("gcf55_config.json")
+jsonhndlr = JSONhandler.JSONhandler("gcf55_config.json")
 if jsonhndlr.read_json():
     # read key values from config file (and cast as necessary)
     user = jsonhndlr.get_val('user')
