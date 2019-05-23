@@ -119,25 +119,32 @@ def get_gc_data(user: str, password: str, chromedriver: str, days: list, url: st
     else:
         print("Error while parsing args.")
 
-# =======================
-# ====== main body ======
-# =======================
-# read config from a JSON
-jsonhndlr = JSONhandler.JSONhandler("gcf55_config.json")
-if jsonhndlr.read_json():
-    # read key values from config file (and cast as necessary)
-    user = jsonhndlr.get_val('user')
-    password = jsonhndlr.get_val('password')
-    chromedriver = jsonhndlr.get_val('chromedriver')
-    # TODO convert to list of datetime
-    days = jsonhndlr.get_val('days')
-    assert(2 == len(days))
-    days[0] = parse_yyyy_mm_dd(days[0])
-    days[1] = parse_yyyy_mm_dd(days[1])
-    url = jsonhndlr.get_val('url')
-    out_dir = jsonhndlr.get_val('out_dir')
-    format_out = jsonhndlr.get_val('format_out')
-    # convert to bool
-    download_gpx = str2bool(jsonhndlr.get_val('download_gpx'))
+# ===========================
+# ====== main function ======
+# ===========================
 
-get_gc_data(user, password, chromedriver, days, url, out_dir, format_out, download_gpx)
+
+def main():
+    # read config from a JSON
+    jsonhndlr = JSONhandler.JSONhandler("gcf55_config.json")
+    if jsonhndlr.read_json():
+        # read key values from config file (and cast as necessary)
+        user = jsonhndlr.get_val('user')
+        password = jsonhndlr.get_val('password')
+        chromedriver = jsonhndlr.get_val('chromedriver')
+        # TODO convert to list of datetime
+        days = jsonhndlr.get_val('days')
+        assert(2 == len(days))
+        days[0] = parse_yyyy_mm_dd(days[0])
+        days[1] = parse_yyyy_mm_dd(days[1])
+        url = jsonhndlr.get_val('url')
+        out_dir = jsonhndlr.get_val('out_dir')
+        format_out = jsonhndlr.get_val('format_out')
+        # convert to bool
+        download_gpx = str2bool(jsonhndlr.get_val('download_gpx'))
+
+    get_gc_data(user, password, chromedriver, days, url, out_dir, format_out, download_gpx)
+
+
+if __name__ == "__main__":
+    main()
