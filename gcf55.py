@@ -134,10 +134,8 @@ def main():
         chromedriver = jsonhndlr.get_val('chromedriver')
         # ast.literal_eval() converts a string representation of a list into a list
         days = ast.literal_eval(jsonhndlr.get_val('days'))
-        print(days)
         assert(2 == len(days))
-        days[0] = parse_yyyy_mm_dd(days[0])
-        days[1] = parse_yyyy_mm_dd(days[1])
+        days = list(map(parse_yyyy_mm_dd, days))
         url = jsonhndlr.get_val('url')
         out_dir = jsonhndlr.get_val('out_dir')
         format_out = jsonhndlr.get_val('format_out')
