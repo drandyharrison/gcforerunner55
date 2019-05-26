@@ -13,9 +13,9 @@
 # !/usr/bin/python3
 # coding: utf-8
 
-import argparse
 import os
-import JSONhandler
+import ast
+import ash_utils
 from datetime import datetime
 from pygce.models.bot import GarminConnectBot
 
@@ -126,14 +126,15 @@ def get_gc_data(user: str, password: str, chromedriver: str, days: list, url: st
 
 def main():
     # read config from a JSON
-    jsonhndlr = JSONhandler.JSONhandler("gcf55_config.json")
+    jsonhndlr = ash_utils.JSONhandler("gcf55_config.json")
     if jsonhndlr.read_json():
         # read key values from config file (and cast as necessary)
         user = jsonhndlr.get_val('user')
         password = jsonhndlr.get_val('password')
         chromedriver = jsonhndlr.get_val('chromedriver')
-        # TODO convert to list of datetime
-        days = jsonhndlr.get_val('days')
+        # ast.literal_eval() converts a string representation of a list into a list
+        days = ast.literal_eval(jsonhndlr.get_val('days'))
+        print(days)
         assert(2 == len(days))
         days[0] = parse_yyyy_mm_dd(days[0])
         days[1] = parse_yyyy_mm_dd(days[1])
