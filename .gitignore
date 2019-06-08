@@ -6,3 +6,5 @@ models/__pycache__/
 models/garmin/__pycache__/
 
 gcf55_config\.json
+
+*.yml
