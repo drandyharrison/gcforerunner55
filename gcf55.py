@@ -21,7 +21,7 @@ import ash_utils
 
 
 def main():
-    gcf = ash_utils.GarminHandler("gcf55_config.json")
+    gcf = ash_utils.GarminHandler("gcf55_config.yml")
     gcf.get_gc_data()
 
 
